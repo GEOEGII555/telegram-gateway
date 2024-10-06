@@ -8,3 +8,4 @@ description = "Interact with the Telegram Gateway API."
 dependencies = [
     "requests"
 ]
+readme = "README.md"
