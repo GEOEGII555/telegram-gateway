@@ -24,3 +24,11 @@ class RequestStatus:
     delivery_status: DeliveryStatus | None = None
     verification_status: VerificationStatus | None = None
     payload: str | None = None
+
+    @classmethod
+    def load_from_dict(cls, data: dict) -> "RequestStatus":
+        if data.get('delivery_status'):
+            data['delivery_status'] = DeliveryStatus(**data['delivery_status'])
+        if data.get('verification_status'):
+            data['verification_status'] = VerificationStatus(**data['verification_status'])
+        return RequestStatus(**data)
