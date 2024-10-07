@@ -46,7 +46,8 @@ class TelegramGateway:
         Returns:
             A RequestStatus object.
         """
-        code = str(code)
+        if code:
+            code = str(code)
         
         if code and code_length and len(code) != code_length:
             raise ValueError("Both code and code_length options are set, and the length of the code isn't equal to the code_length option.")
