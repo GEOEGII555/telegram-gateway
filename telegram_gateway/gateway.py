@@ -3,6 +3,9 @@ import requests
 from . import constants, types
 
 class TelegramGateway:
+    """The TelegramGateway class is used to interact with the Telegram Gateway."""
+    
+    """The API token."""
     api_token: str
     
     @property
@@ -10,6 +13,11 @@ class TelegramGateway:
         return dict(authorization=f"Bearer {self.api_token}")
     
     def __init__(self, api_token: str) -> None:
+        """Create an object of TelegramGateway to access the API.
+
+        Arguments:
+            api_token -- Your token.
+        """
         self.api_token = api_token
     
     def sendVerificationMessage(self, phone_number: str, code: str | int | None = None, code_length: int | None = None, sender_username: str | None = None, request_id: str | None = None, callback_url: str | None = None, payload: str | None = None, ttl: int | None = None) -> types.RequestStatus:
