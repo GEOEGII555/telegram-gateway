@@ -32,14 +32,14 @@ class TelegramGateway:
             sender_username -- Username of the Telegram channel from which the code will be sent. The specified channel, if any, must be verified and owned by the same account who owns the Gateway API token. (default: {None})
             request_id -- The unique identifier of a previous request from checkSendAbility. If provided, this request will be free of charge, so specify this argument if you used checkSendAbility and don't want your cost to double. (default: {None})
             callback_url -- A URL where you want to receive delivery reports related to the sent message. (default: {None})
-            payload -- Custom payload, 0-256 bytes. This will not be displayed to the user, use it for your internal processes. (default: {None})
-            ttl -- Time-to-live (in seconds) before the message expires and is deleted. The message will not be deleted if it has already been read. If not specified, the message will not be deleted. (default: {None})
-
+            payload -- Custom payload, 0-128 bytes. This will not be displayed to the user, use it for your internal processes. (default: {None})
+            ttl -- Time-to-live (in seconds, 30...3600) before the message expires and is deleted. The message will not be deleted if it has already been read. If a message is not delivered within the specified ttl, the request fee will be refunded automatically. If a message is successfully delivered within the ttl, it will not be refunded. If not specified, the message will not be deleted. (default: {None})
+            
         Raises:
             ValueError: Raised if you specified both code and code_length, and len(code) != code_length.
             ValueError: Raised if the code is not 4 to 8 digits long.
-            ValueError: Raised if ttl is less than 1.
-            ValueError: Raised if the amount of bytes in payload (encoded with utf-8) is bigger than 256 or is less than 0.
+            ValueError: Raised if ttl is less than 30 or bigger than 3600.
+            ValueError: Raised if the amount of bytes in payload (encoded with utf-8) is bigger than 128.
             ValueError: Raised if the code is not a number.
             RuntimeError: Telegram Gateway returned an error.
         
@@ -58,11 +58,11 @@ class TelegramGateway:
         if code and not code.isdigit():
             raise ValueError("The code is not a number.")
         
-        if ttl and ttl < 1:
-            raise ValueError("TTL is less than 1.")
+        if ttl and (ttl < 30 or ttl > 3600):
+            raise ValueError("TTL is less than 30 or bigger than 3600.")
         
-        if payload and len(payload.encode()) not in range(0, 257):
-            raise ValueError("The amount of bytes in payload (encoded with utf-8) is bigger than 256 or is less than 0.")
+        if payload and len(payload.encode()) > 128:
+            raise ValueError("The amount of bytes in payload (encoded with utf-8) is bigger than 128 bytes.")
         
         result = requests.post(constants.SEND_VERIFICATION_MESSAGE_URL, headers=self._headers, data={
             'phone_number': phone_number,

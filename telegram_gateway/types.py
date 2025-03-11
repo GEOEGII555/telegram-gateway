@@ -24,6 +24,7 @@ class RequestStatus:
     delivery_status: DeliveryStatus | None = None
     verification_status: VerificationStatus | None = None
     payload: str | None = None
+    is_refunded: bool | None = None
 
     @classmethod
     def load_from_dict(cls, data: dict) -> "RequestStatus":
